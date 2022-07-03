@@ -181,7 +181,9 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     # END PROBLEM 5
     # (note that the indentation for the problem 7 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+        leader,message = say(score0,score1,leader)
+        if message:
+            print(message)
     # END PROBLEM 7
     return score0, score1
 
@@ -215,7 +217,21 @@ def announce_lead_changes(score0, score1, last_leader=None):
     Player 0 takes the lead by 2
     """
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+    diff_score = score0 - score1
+    if diff_score > 0:
+        leader = 0
+        if leader != last_leader:
+            return leader, f"Player 0 takes the lead by {diff_score}"
+        else:
+            return leader, None
+    elif diff_score < 0:
+        leader = 1
+        if leader != last_leader:
+            return leader, f"Player 1 takes the lead by {-diff_score}"
+        else:
+            return leader, None
+    else:
+        return None, None
     # END PROBLEM 6
 
 
