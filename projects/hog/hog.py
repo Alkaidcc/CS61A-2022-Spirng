@@ -352,8 +352,8 @@ def run_experiments():
 
     #print('always_roll(8) win rate:', average_win_rate(always_roll(8)))
     #print('hefty_hogs_strategy win rate:', average_win_rate(hefty_hogs_strategy))
-    print('hog_pile_strategy win rate:', average_win_rate(hog_pile_strategy))
-    #print('final_strategy win rate:', average_win_rate(final_strategy))
+    # print('hog_pile_strategy win rate:', average_win_rate(hog_pile_strategy))
+    print('final_strategy win rate:', average_win_rate(final_strategy))
     "*** You may add additional experiments as you wish ***"
 
 
@@ -362,7 +362,7 @@ def hefty_hogs_strategy(score, opponent_score, threshold=8, num_rolls=6):
     returns NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Remove this line once implemented.
+    return 0 if hefty_hogs(score, opponent_score) >= threshold else num_rolls
     # END PROBLEM 10
 
 
@@ -372,7 +372,10 @@ def hog_pile_strategy(score, opponent_score, threshold=8, num_rolls=6):
     Otherwise, it returns NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Remove this line once implemented.
+    if hefty_hogs_strategy(score, opponent_score, threshold, num_rolls) == 0:
+        return 0
+    else:
+        return 0 if hog_pile(score+hefty_hogs(score,opponent_score), opponent_score) else num_rolls
     # END PROBLEM 11
 
 
