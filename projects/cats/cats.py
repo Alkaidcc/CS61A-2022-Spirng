@@ -134,7 +134,14 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     'testing'
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    diff_score = [diff_function(typed_word, word, limit) for word in word_list]
+    valid_score = [i for i in diff_score if i <= limit]
+    if not valid_score:
+        return typed_word
+    score_index = diff_score.index(min(valid_score))
+    return word_list[score_index]
     # END PROBLEM 5
 
 
@@ -161,7 +168,17 @@ def sphinx_swaps(start, goal, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    def swap_helper(start, goal, limit, count):
+        if count > limit:
+            return count
+        elif start and goal:
+            if start[0] == goal[0]:
+                return swap_helper(start[1:], goal[1:], limit, count)
+            else:
+                return swap_helper(start[1:], goal[1:], limit, count + 1)
+        else:
+            return abs(len(start) - len(goal)) + count
+    return swap_helper(start, goal, limit, 0)
     # END PROBLEM 6
 
 
@@ -182,24 +199,24 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
+    if start == goal:
+        return 0
+    if limit < 0:  # Fill in the condition
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return 0
         # END
-
-    elif ___________:  # Feel free to remove or add additional cases
+    elif not start or not goal:
+        return abs(len(start)-len(goal))
+    elif start[0] == goal[0]:  # Feel free to remove or add additional cases
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return minimum_mewtations(start[1:], goal[1:], limit)
         # END
-
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = minimum_mewtations(start,goal[1:],limit-1)
+        remove = minimum_mewtations(start[1:],goal,limit-1)
+        substitute = minimum_mewtations(start[1:],goal[1:],limit-1)
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return min(add,remove,substitute) + 1
         # END
 
 
