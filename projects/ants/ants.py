@@ -105,7 +105,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
     is_container = False
-    # ADD CLASS ATTRIBUTES HERE
+    is_double = False # For Queen
 
     def __init__(self, health=1):
         """Create an Insect with a HEALTH quantity."""
@@ -423,7 +423,7 @@ class ScubaThrower(ThrowerAnt):
 # BEGIN Problem 12
 
 
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
 # END Problem 12
     """The Queen of the colony. The game is over if a bee enters her place."""
 
@@ -431,7 +431,7 @@ class QueenAnt(Ant):  # You should change this line
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 12
 
     @classmethod
@@ -441,7 +441,11 @@ class QueenAnt(Ant):  # You should change this line
         returns None otherwise. Remember to call the construct() method of the superclass!
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+
+        if gamestate.one_queen:
+            return
+        gamestate.one_queen = True
+        return super().construct(gamestate)
         # END Problem 12
 
     def action(self, gamestate):
@@ -449,7 +453,29 @@ class QueenAnt(Ant):  # You should change this line
         in her tunnel.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        # self fight
+        super().action(gamestate)
+        # double damage of all ants behind
+        current_place = self.place.exit
+        while current_place:
+            if current_place.ant:
+                # check already doubled
+                if current_place.ant.is_double:
+                    if current_place.ant.is_container:
+                        if current_place.ant.ant_contained:
+                            if current_place.ant.ant_contained.is_double == False:
+                                current_place.ant.ant_contained.is_double = True
+                                current_place.ant.ant_contained.damage *= 2
+                # not doubled
+                else:
+                    current_place.ant.is_double = True
+                    current_place.ant.damage *= 2
+                    if current_place.ant.is_container:
+                        if current_place.ant.ant_contained:
+                            if current_place.ant.ant_contained.is_double == False:
+                                current_place.ant.ant_contained.is_double = True
+                                current_place.ant.ant_contained.damage *= 2
+            current_place = current_place.exit
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -457,8 +483,11 @@ class QueenAnt(Ant):  # You should change this line
         remaining, signal the end of the game.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        if self.health - amount <= 0:
+            ants_lose()
         # END Problem 12
+    def remove_from(self, place):
+        pass
 
 
 class AntRemover(Ant):
@@ -726,6 +755,7 @@ class GameState:
         self.ant_types = OrderedDict((a.name, a) for a in ant_types)
         self.dimensions = dimensions
         self.active_bees = []
+        self.one_queen = False
         self.configure(beehive, create_places)
 
     def configure(self, beehive, create_places):
