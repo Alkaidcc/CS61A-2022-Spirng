@@ -1,0 +1,4 @@
+'midsem_survey-correct', (0, 70)
+'has_path-correct', (512, 70)
+'duplicate_link-correct', (1024, 70)
+'deep_map_mut-correct', (1536, 70)
